@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare ASL - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .success-message {
+            background: #efe;
+            color: #393;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Healthcare ASL</h1>
+            <p>Sign in to your account</p>
+        </div>
+        
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+        
+        <div class="register-link">
+            Don't have an account? <a href="registration.html">Register here</a>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        // For demo purposes, we'll simulate a login without backend
+        // In a real app, you would call your API as in your original code
+        
+        // Demo user data
+        const demoUser = {
+            name: "Shivani",
+            role: "Doctor",
+            email: email,
+            name: "Tara",
+            role: "patient",
+            email: email
+        };
+        
+        
+        // Store user in localStorage
+        localStorage.setItem('user', JSON.stringify(demoUser));
+        
+        // Show success message
+        document.getElementById('success-message').textContent = 'Login successful! Redirecting...';
+        document.getElementById('success-message').style.display = 'block';
+        document.getElementById('error-message').style.display = 'none';
+        
+        // Redirect to patient dashboard after 1 second
+        setTimeout(() => {
+            window.location.href = 'patient_dashboard.html';
+        }, 1000);
+        
+        /* 
+        // This would be your actual API call in a real application
+        try {
+            const response = await fetch('http://localhost:3000/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                // Redirect based on user role
+                if (data.user.role === 'patient') {
+                    window.location.href = 'patient_dashboard.html';
+                } else if (data.user.role === 'doctor') {
+                    window.location.href = 'doctor_dashboard.html';
+                } else {
+                    window.location.href = 'admin_dashboard.html';
+                }
+
+            } else {
+                document.getElementById('error-message').textContent = data.message;
+                document.getElementById('error-message').style.display = 'block';
+            }
+        } catch (error) {
+            document.getElementById('error-message').textContent = 'Network error. Please try again.';
+            document.getElementById('error-message').style.display = 'block';
+        }
+        */
+    });
+    </script>
+</body>

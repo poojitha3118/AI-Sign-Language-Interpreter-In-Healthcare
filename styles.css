@@ -1,0 +1,340 @@
+/* Healthcare Chat Design System */
+:root {
+  /* Healthcare themed colors */
+  --background: hsl(240, 5%, 96%);
+  --foreground: hsl(215, 25%, 27%);
+  
+  --chat-background: hsl(0, 0%, 100%);
+  --chat-header: hsl(210, 100%, 98%);
+  
+  /* Message bubble colors */
+  --patient-message: hsl(210, 100%, 94%);
+  --patient-message-text: hsl(210, 100%, 40%);
+  --doctor-message: hsl(120, 40%, 88%);
+  --doctor-message-text: hsl(120, 60%, 25%);
+  
+  /* UI elements */
+  --input-background: hsl(0, 0%, 100%);
+  --input-border: hsl(210, 15%, 88%);
+  --send-button: hsl(210, 100%, 50%);
+  --send-button-hover: hsl(210, 100%, 45%);
+  
+  /* Status indicators */
+  --online-status: hsl(120, 100%, 40%);
+  --offline-status: hsl(0, 100%, 50%);
+  --typing-indicator: hsl(45, 100%, 60%);
+  
+  --border-radius: 16px;
+  --message-radius: 18px;
+}
+
+/* Global styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Chat specific styles */
+.chat-container {
+  width: 100%;
+  max-width: 800px;
+  height: 90vh;
+  max-height: 800px;
+  display: flex;
+  flex-direction: column;
+  background: var(--chat-background);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 10px 30px hsla(0, 0%, 0%, 0.1);
+}
+
+.chat-header {
+  background: var(--chat-header);
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--input-border);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.header-info {
+  flex: 1;
+}
+
+.header-info h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-indicator.online {
+  background: var(--online-status);
+  animation: pulse 2s infinite;
+}
+
+.status-indicator.offline {
+  background: var(--offline-status);
+}
+
+.status-text {
+  font-size: 0.75rem;
+  color: var(--foreground);
+  opacity: 0.7;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  background: var(--background);
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message.patient {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.message.doctor {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.message-bubble {
+  padding: 0.75rem 1rem;
+  border-radius: var(--message-radius);
+  word-wrap: break-word;
+  line-height: 1.4;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.message.patient .message-bubble {
+  background: var(--patient-message);
+  color: var(--patient-message-text);
+  border-bottom-right-radius: 4px;
+}
+
+.message.doctor .message-bubble {
+  background: var(--doctor-message);
+  color: var(--doctor-message-text);
+  border-bottom-left-radius: 4px;
+}
+
+.message-time {
+  font-size: 0.75rem;
+  color: hsla(var(--foreground), 0.6);
+  margin-top: 0.25rem;
+  padding: 0 0.5rem;
+}
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  max-width: 70%;
+  background: var(--doctor-message);
+  border-radius: var(--message-radius);
+  border-bottom-left-radius: 4px;
+  color: var(--doctor-message-text);
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.typing-dots {
+  display: flex;
+  gap: 3px;
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--typing-indicator);
+  animation: typingBounce 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.chat-input-area {
+  padding: 1rem 1.5rem;
+  background: var(--chat-background);
+  border-top: 1px solid var(--input-border);
+}
+
+.input-container {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.message-input {
+  flex: 1;
+  min-height: 44px;
+  max-height: 120px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 22px;
+  background: var(--input-background);
+  resize: none;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.message-input:focus {
+  border-color: var(--send-button);
+  box-shadow: 0 0 0 3px hsla(var(--send-button), 0.1);
+}
+
+.send-button {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: var(--send-button);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 1.1rem;
+}
+
+.send-button:hover:not(:disabled) {
+  background: var(--send-button-hover);
+  transform: scale(1.05);
+}
+
+.send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Connection status */
+.connection-status {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 100;
+}
+
+.connection-status.connected {
+  background: var(--online-status);
+}
+
+.connection-status.disconnected {
+  background: var(--offline-status);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .chat-container {
+    height: 100vh;
+    max-height: none;
+    border-radius: 0;
+  }
+  
+  .message {
+    max-width: 85%;
+  }
+  
+  .chat-header {
+    padding: 1rem;
+  }
+  
+  .chat-input-area {
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare ASL - Doctor Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --secondary: #f7fafc;
+            --text: #2d3748;
+            --text-light: #718096;
+            --white: #ffffff;
+            --danger: #e53e3e;
+            --success: #38a169;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text);
+        }
+        
+        /* Dashboard */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .logout-btn i {
+            margin-right: 8px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            color: var(--text);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .user-info h3 {
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+        
+        .user-info p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        
+        /* Dashboard Content */
+        .dashboard-section {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dashboard-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .dashboard-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .request-list {
+            list-style: none;
+        }
+        
+        .request-list li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .request-list input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        
+        .empty-state {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+        
+        .dashboard-tip {
+            background-color: #f0f9ff;
+            padding: 15px;
+            border-radius: 5px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        /* Patient Request Cards */
+        .patient-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .patient-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .patient-card h4 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .patient-card h4 i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .patient-card p {
+            margin-bottom: 5px;
+            color: var(--text-light);
+        }
+        
+        .patient-card .patient-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .patient-card .btn {
+            padding: 8px 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        .patient-card .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .emergency-card {
+            border-left-color: var(--danger);
+        }
+        
+        .emergency-card h4 i {
+            color: var(--danger);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .patient-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard View -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Healthcare ASL</h2>
+                <p>Doctor Dashboard</p>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Appointments</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Patients</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-prescription"></i>
+                    <span>Prescriptions</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-comments"></i>
+                    <span>Messages</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Doctor Portal</h1>
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=Dr+Amrutha&background=667eea&color=fff" alt="User" id="doctorAvatar">
+                    <div class="user-info">
+                        <h3 id="doctorName">Dr. Amrutha</h3>
+                        <p id="doctorSpecialty">Neurology • License: <span id="doctorLicense">MD-1234567-XY</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <div class="dashboard-section">
+                    <h2>Welcome, <span id="welcomeName">Dr. Amrutha</span></h2>
+                    <p id="welcomeSpecialty">Neurology • License: <span id="welcomeLicense">MD-1234567-XY</span></p>
+                </div>
+                
+                <div class="dashboard-section">
+                    <h3>Active Patient Requests</h3>
+                    <div class="patient-cards">
+                        <div class="patient-card emergency-card">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Emergency Request</h4>
+                            <p><strong>Patient:</strong> Sarah Johnson</p>
+                            <p><strong>Issue:</strong> Severe headache with vision changes</p>
+                            <p><strong>Waiting:</strong> 5 minutes</p>
+                            <div class="patient-meta">
+                                <span><i class="fas fa-clock"></i> 10:15 AM</span>
+                                <span><i class="fas fa-phone"></i> Video call requested</span>
+                            </div>
+                            <button class="btn">Respond Now</button>
+                        </div>
+                        
+                        <div class="patient-card">
+                            <h4><i class="fas fa-comment-medical"></i> Consultation Request</h4>
+                            <p><strong>Patient:</strong> Michael Chen</p>
+                            <p><strong>Issue:</strong> Follow-up on medication</p>
+                            <p><strong>Waiting:</strong> 12 minutes</p>
+                            <div class="patient-meta">
+                                <span><i class="fas fa-clock"></i> 10:08 AM</span>
+                                <span><i class="fas fa-comments"></i> Text chat</span>
+                            </div>
+                            <button class="btn">Respond Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-section">
+                    <h3>Today's Appointments</h3>
+                    <div class="patient-cards">
+                        <div class="patient-card">
+                            <h4><i class="fas fa-calendar-check"></i> Upcoming Appointment</h4>
+                            <p><strong>Patient:</strong> Robert Williams</p>
+                            <p><strong>Time:</strong> 11:30 AM (in 45 minutes)</p>
+                            <p><strong>Purpose:</strong> Routine checkup</p>
+                            <div class="patient-meta">
+                                <span><i class="fas fa-video"></i> Video consultation</span>
+                            </div>
+                            <button class="btn">Prepare Notes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo functionality - no login required
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set demo doctor data
+            const doctor = {
+                name: 'Amrutha',
+                specialty: 'Neurology',
+                license: 'MD-1234567-XY'
+            };
+            
+            // Update UI with demo doctor data
+            document.getElementById('doctorName').textContent = `Dr. ${doctor.name}`;
+            document.getElementById('doctorSpecialty').textContent = `${doctor.specialty} • License: ${doctor.license}`;
+            document.getElementById('welcomeName').textContent = `Dr. ${doctor.name}`;
+            document.getElementById('welcomeSpecialty').textContent = `${doctor.specialty} • License: ${doctor.license}`;
+            document.getElementById('doctorLicense').textContent = doctor.license;
+            document.getElementById('welcomeLicense').textContent = doctor.license;
+            
+            // Add click handlers for demo buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('In a real application, this would open the corresponding feature.\n\nThis is a demo version that works without login.');
+                });
+            });
+            
+            // Logout button (just shows a message in demo)
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                alert('In a real application, this would log you out.\n\nThis is a demo version that works without login.');
+            });
+            
+            // Simulate new patient request after 10 seconds
+            setTimeout(() => {
+                const requestsSection = document.querySelector('.dashboard-section h3:contains("Active Patient Requests")').parentElement;
+                const patientCards = requestsSection.querySelector('.patient-cards');
+                
+                const newCard = document.createElement('div');
+                newCard.className = 'patient-card';
+                newCard.innerHTML = `
+                    <h4><i class="fas fa-comment-medical"></i> New Consultation</h4>
+                    <p><strong>Patient:</strong> Emma Davis</p>
+                    <p><strong>Issue:</strong> Questions about test results</p>
+                    <p><strong>Waiting:</strong> Just now</p>
+                    <div class="patient-meta">
+                        <span><i class="fas fa-clock"></i> ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                        <span><i class="fas fa-comments"></i> Text chat</span>
+                    </div>
+                    <button class="btn">Respond Now</button>
+                `;
+                
+                patientCards.appendChild(newCard);
+                newCard.querySelector('.btn').addEventListener('click', function() {
+                    alert('New patient request clicked!');
+                });
+                
+                // Flash animation for new request
+                newCard.style.animation = 'flash 2s';
+                setTimeout(() => {
+                    newCard.style.animation = '';
+                }, 2000);
+                
+            }, 10000);
+        });
+    </script>
+</body>
+</html>

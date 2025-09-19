@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare ASL - Register</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .register-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .register-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .role-section {
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .role-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .professional-fields,
+        .emergency-fields {
+            display: none;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .error-message,
+        .success-message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #393;
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <div class="register-header">
+        <h1>Healthcare ASL</h1>
+        <p>Create your account</p>
+    </div>
+
+    <div id="error-message" class="error-message"></div>
+    <div id="success-message" class="success-message"></div>
+
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required minlength="6">
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone">
+        </div>
+
+        <div class="form-group">
+            <label for="role">Role</label>
+            <select id="role" name="role" required>
+                <option value="">Select Role</option>
+                <option value="patient">Patient</option>
+                <option value="doctor">Doctor</option>
+                <option value="nurse">Nurse</option>
+                <option value="interpreter">Interpreter</option>
+            </select>
+        </div>
+
+        <div id="professional-fields" class="professional-fields">
+            <div class="role-section">
+                <h3>Professional Information</h3>
+                <div class="form-group">
+                    <label for="licenseNumber">License Number</label>
+                    <input type="text" id="licenseNumber" name="licenseNumber">
+                </div>
+                <div class="form-group">
+                    <label for="specialization">Specialization</label>
+                    <input type="text" id="specialization" name="specialization">
+                </div>
+                <div class="form-group">
+                    <label for="hospital">Hospital/Clinic</label>
+                    <input type="text" id="hospital" name="hospital">
+                </div>
+            </div>
+        </div>
+
+        <div id="emergency-fields" class="emergency-fields">
+            <div class="role-section">
+                <h3>Emergency Contact</h3>
+                <div class="form-group">
+                    <label for="emergencyName">Contact Name</label>
+                    <input type="text" id="emergencyName" name="emergencyName">
+                </div>
+                <div class="form-group">
+                    <label for="emergencyPhone">Contact Phone</label>
+                    <input type="tel" id="emergencyPhone" name="emergencyPhone">
+                </div>
+                <div class="form-group">
+                    <label for="emergencyRelationship">Relationship</label>
+                    <input type="text" id="emergencyRelationship" name="emergencyRelationship">
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="register-btn">Create Account</button>
+    </form>
+
+    <div class="login-link">
+        Already have an account? <a href="login.html">Sign in here</a>
+    </div>
+</div>
+
+<script>
+    document.getElementById('role').addEventListener('change', function () {
+        const role = this.value;
+        const professionalFields = document.getElementById('professional-fields');
+        const emergencyFields = document.getElementById('emergency-fields');
+
+        professionalFields.style.display = (role === 'doctor' || role === 'nurse') ? 'block' : 'none';
+        emergencyFields.style.display = (role === 'patient') ? 'block' : 'none';
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+
+        const userData = {
+            fullName: data.fullName,
+            email: data.email,
+            password: data.password,
+            role: data.role,
+            phone: data.phone
+        };
+
+        if (data.role === 'patient') {
+            userData.emergencyContact = {
+                name: data.emergencyName,
+                phone: data.emergencyPhone,
+                relationship: data.emergencyRelationship
+            };
+        } else if (data.role === 'doctor' || data.role === 'nurse') {
+            userData.professional = {
+                licenseNumber: data.licenseNumber,
+                specialization: data.specialization,
+                hospital: data.hospital
+            };
+        }
+
+        try {
+            const response = await fetch('http://localhost:3000/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                document.getElementById('success-message').textContent = 'Account created successfully! Redirecting to login...';
+                document.getElementById('success-message').style.display = 'block';
+                document.getElementById('error-message').style.display = 'none';
+
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+            } else {
+                document.getElementById('error-message').textContent = result.message;
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('success-message').style.display = 'none';
+            }
+        } catch (error) {
+            document.getElementById('error-message').textContent = 'Network error. Please try again.';
+            document.getElementById('error-message').style.display = 'block';
+            document.getElementById('success-message').style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard - Healthcare ASL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --secondary: #f7fafc;
+            --text: #2d3748;
+            --text-light: #718096;
+            --white: #ffffff;
+            --danger: #e53e3e;
+            --success: #38a169;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text);
+            padding: 20px;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            color: var(--text);
+            font-weight: 600;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .user-info h3 {
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+        
+        .user-info p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        
+        /* Status Cards */
+        .status-cards {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .status-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            flex: 1;
+        }
+        
+        .status-card h3 {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .status-card h3 i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+        
+        .status-card p {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        /* Communication Section */
+        .communication-section {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .communication-section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+        
+        .communication-section p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        
+        .doctor-request {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .doctor-request p {
+            margin-bottom: 15px;
+        }
+        
+        .request-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #c53030 100%);
+            color: white;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .action-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .action-card h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .action-card h3 i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+        
+        .action-card p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .status-cards, .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .request-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content -->
+    <div class="header">
+        <h1>Welcome back, <span id="user-name">Pandiri Yamini</span></h1>
+        <div class="user-profile">
+            <img id="user-avatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
+            <div class="user-info">
+                <h3 id="user-fullname">Pandiri Yamini</h3>
+                <p>Patient</p>
+            </div>
+        </div>
+    </div>
+    
+    <p style="color: var(--text-light); margin-bottom: 25px;">Connect with healthcare professionals using sign language interpretation</p>
+    
+    <!-- Status Cards -->
+    <div class="status-cards">
+        <div class="status-card">
+            <h3><i class="fas fa-user-md"></i> Online Doctors</h3>
+            <p id="available-doctors">0</p>
+        </div>
+        <div class="status-card">
+            <h3><i class="fas fa-plug"></i> Connection Status</h3>
+            <p id="connection-status">Ready</p>
+        </div>
+        <div class="status-card">
+            <h3><i class="fas fa-exclamation-triangle"></i> Emergency Status</h3>
+            <p id="emergency-status">Normal</p>
+        </div>
+    </div>
+    
+    <!-- Communication Section -->
+    <div class="communication-section">
+        <h2>Start Communication Session</h2>
+        <p>Request a doctor and begin sign language communication</p>
+        
+        <div class="doctor-request">
+            <h3>Request Doctor</h3>
+            <p id="doctor-request-status">Available Doctors: 0<br>No doctors currently online. Your request will be queued.</p>
+            
+            <div class="request-buttons">
+                <button class="btn btn-primary" id="request-doctor-btn">
+                    <i class="fas fa-user-md"></i> Request Doctor Now
+                </button>
+                <button class="btn btn-danger" id="emergency-btn">
+                    <i class="fas fa-exclamation-triangle"></i> Emergency
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <h2 style="font-size: 1.3rem; margin-bottom: 20px; color: var(--text);">Quick Actions</h2>
+    
+    <div class="quick-actions">
+        <div class="action-card">
+            <h3><i class="fas fa-hands"></i> Test ASL Recognition</h3>
+            <p>Practice sign language detection</p>
+            <button class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-play"></i> Start Test
+            </button>
+        </div>
+        
+        <div class="action-card">
+            <h3><i class="fas fa-bell"></i> Emergency Alert</h3>
+            <p>Send immediate help request</p>
+            <button class="btn btn-danger" style="width: 100%;">
+                <i class="fas fa-exclamation"></i> Trigger Alert
+            </button>
+        </div>
+    </div>
+    
+    <!-- Connection Modal -->
+    <div id="connectionModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Doctor Connected</h3>
+            <p id="doctor-connected-name">Dr. Michael Smith (Cardiologist)</p>
+            <p>You can now start your ASL communication session.</p>
+            <button id="start-session-btn" class="btn btn-primary" style="width: 100%; margin-top: 15px;">
+                Start Session
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        const user = JSON.parse(localStorage.getItem('user')) || {
+            name: "Pandiri Yamini",
+            role: "patient",
+            avatar: "https://randomuser.me/api/portraits/women/44.jpg"
+        };
+
+        // Load user data
+        document.getElementById('user-name').textContent = user.name.split(' ')[0] || 'User';
+        document.getElementById('user-fullname').textContent = user.name || 'Patient User';
+        document.getElementById('user-avatar').src = user.avatar || 'https://randomuser.me/api/portraits/women/44.jpg';
+
+        // Request doctor functionality
+        document.getElementById('request-doctor-btn').addEventListener('click', async () => {
+            // Static doctor data (replace with actual API call in production)
+            const staticDoctor = {
+                name: "Dr. Michael Smith",
+                specialty: "Cardiologist"
+            };
+            
+            // Show the connected doctor in modal
+            document.getElementById('doctor-connected-name').textContent = 
+                `${staticDoctor.name} (${staticDoctor.specialty})`;
+            
+            // Show modal
+            document.getElementById('connectionModal').style.display = 'block';
+            
+            // Update status
+            document.getElementById('connection-status').textContent = 'Connected';
+            
+            // In a real app, you would make an API call here:
+            /*
+            try {
+                const response = await fetch('/api/doctor/request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${user.token}`
+                    },
+                    body: JSON.stringify({ patientId: user._id })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('doctor-connected-name').textContent = 
+                        `${data.doctor.name} (${data.doctor.specialty})`;
+                    document.getElementById('connectionModal').style.display = 'block';
+                    document.getElementById('connection-status').textContent = 'Connected';
+                } else {
+                    alert(data.message || 'Failed to request doctor');
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+            }
+            */
+        });
+
+        // Emergency button functionality
+        document.getElementById('emergency-btn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to trigger an emergency alert?')) {
+                document.getElementById('emergency-status').textContent = 'Emergency';
+                alert('Emergency alert sent! Help is on the way.');
+            }
+        });
+
+        // Modal functionality
+        document.querySelector('.close').addEventListener('click', () => {
+            document.getElementById('connectionModal').style.display = 'none';
+        });
+
+        document.getElementById('start-session-btn').addEventListener('click', () => {
+            window.location.href = 'main.html';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === document.getElementById('connectionModal')) {
+                document.getElementById('connectionModal').style.display = 'none';
+            }
+        });
+
+        // Check for available doctors (simulated)
+        function checkAvailableDoctors() {
+            // Simulate checking for available doctors
+            const availableCount = Math.random() > 0.5 ? 1 : 0; // Randomly show available doctors
+            
+            document.getElementById('available-doctors').textContent = availableCount;
+            if (availableCount > 0) {
+                document.getElementById('doctor-request-status').innerHTML = 
+                    `Available Doctors: ${availableCount}<br>Doctors are available for immediate connection`;
+            } else {
+                document.getElementById('doctor-request-status').innerHTML = 
+                    `Available Doctors: 0<br>No doctors currently online. Your request will be queued.`;
+            }
+            
+            setTimeout(checkAvailableDoctors, 10000); // Check every 10 seconds
+        }
+
+        // Initial check
+        checkAvailableDoctors();
+    </script>
+</body>
+</html>

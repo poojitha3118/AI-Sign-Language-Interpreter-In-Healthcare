@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SignSpeak Health</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background: #f9fbfc;
+      color: #0f172a;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .card-icon {
+      font-size: 24px;
+      margin-right: 10px;
+      color: #0366d6;
+    }
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    .checkbox {
+      margin-right: 8px;
+    }
+    .btn {
+      padding: 12px 20px;
+      margin-top: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      background: #0366d6;
+      color: white;
+      transition: all 0.2s ease;
+    }
+    .btn:hover {
+      background: #0250b3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .btn-start {
+      background: #10b981;
+    }
+    .btn-start:hover {
+      background: #0d9f6e;
+    }
+    .divider {
+      height: 1px;
+      background: #e2e8f0;
+      margin: 20px 0;
+    }
+    .webcam-section {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .webcam-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      margin-bottom: 20px;
+    }
+    .video-box, .image-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    video {
+      width: 640px;
+      height: 360px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+    }
+    #processed-image {
+      border: 2px solid #2563eb;
+      border-radius: 8px;
+      margin-top: 10px;
+      width: 640px;
+      height: 360px;
+    }
+    .output-label {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .output-value {
+      font-size: 1.5em;
+      color: #2563eb;
+      margin-bottom: 20px;
+    }
+    .webcam-controls {
+      margin: 20px 0;
+    }
+    .webcam-btn {
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .btn-start-webcam {
+      background: #10b981;
+      color: white;
+    }
+    .btn-stop-webcam {
+      background: #ef4444;
+      color: white;
+    }
+    .btn-finish-word {
+      background: #f59e0b;
+      color: white;
+    }
+    .dropzone {
+      border: 2px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    .dropzone:hover {
+      border-color: #94a3b8;
+    }
+    .file-types {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SignSpeak Health</h1>
+    
+    <div class="dashboard">
+      <!-- Consultation Session Card -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-video card-icon"></i>
+          <h2 class="card-title">Consultation Session</h2>
+        </div>
+        <div>
+          <input type="checkbox" class="checkbox" disabled checked>
+          <label>Not Connected</label>
+        </div>
+        <div>
+          <input type="checkbox" class="checkbox" disabled checked>
+          <label>Ready to start a consultation?</label>
+        </div>
+        <p>Connect with a doctor for sign language interpretation</p>
+        <button class="btn btn-start" id="start-session">Start Session</button>
+      </div>
+      
+      
+      <!-- Notifications Card -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-bell card-icon"></i>
+          <h2 class="card-title">Notifications</h2>
+        </div>
+        <div>
+          <input type="checkbox" class="checkbox" disabled checked>
+          <label>Welcome to SignSpeak Health</label>
+        </div>
+        <p>Your sign language interpreter is ready to help</p>
+      </div>
+    </div>
+
+    <!-- Webcam Section (hidden by default) -->
+    <div class="webcam-section" id="webcam-section" style="display: none;">
+      <h2>Sign Language Interpreter</h2>
+      <p>Enable your webcam to start the sign language interpretation session</p>
+      
+      <div class="webcam-container">
+        <div class="video-box">
+          <div>Live Webcam</div>
+          <video id="webcam" width="320" height="240" autoplay muted></video>
+        </div>
+        <div class="image-box">
+          <div>Processed Frame</div>
+          <img id="processed-image" width="320" height="240" alt="Processed frame" />
+        </div>
+      </div>
+      
+      <div class="webcam-controls">
+        <button class="webcam-btn btn-start-webcam" id="start-webcam">Start Webcam</button>
+        <button class="webcam-btn btn-stop-webcam" id="stop-webcam">Stop Webcam</button>
+        <button class="webcam-btn btn-finish-word" id="finish-word">Finish Word</button>
+      </div>
+      
+      <div class="output-label">Predicted Letter:</div>
+      <div class="output-value" id="predicted-letter"></div>
+      <div class="output-label">Current Word:</div>
+      <div class="output-value" id="current-word"></div>
+    </div>
+  </div>
+
+  <script>
+    // SignSpeak Health functionality
+    let signDetectionInterval;
+    let currentWord = '';
+    let isWebcamRunning = false;
+
+    document.getElementById('start-session').addEventListener('click', function() {
+      const webcamSection = document.getElementById('webcam-section');
+      webcamSection.style.display = 'block';
+      webcamSection.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Webcam control buttons
+    document.getElementById('start-webcam').addEventListener('click', startWebcam);
+    document.getElementById('stop-webcam').addEventListener('click', stopWebcam);
+    document.getElementById('finish-word').addEventListener('click', finishWord);
+
+    async function startWebcam() {
+      if (isWebcamRunning) return;
+      
+      const video = document.getElementById('webcam');
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        isWebcamRunning = true;
+        
+        // Start sign detection (connect to your local backend)
+        startSignDetection();
+      } catch (error) {
+        console.error("Webcam access error:", error);
+        alert("Could not access webcam. Please ensure you've granted camera permissions.");
+      }
+    }
+
+    function stopWebcam() {
+      const video = document.getElementById('webcam');
+      if (video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+      }
+      isWebcamRunning = false;
+      
+      // Stop sign detection
+      clearInterval(signDetectionInterval);
+    }
+
+    function finishWord() {
+      if (currentWord) {
+        // Send the completed word to chat
+        sendToChat(currentWord);
+        currentWord = '';
+        document.getElementById('current-word').textContent = '';
+      }
+    }
+
+    function startSignDetection() {
+      // Connect to your local BSL backend
+      signDetectionInterval = setInterval(async () => {
+        try {
+          // Capture frame from video
+          const video = document.getElementById('webcam');
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          
+          // Convert to blob to send to your backend
+          canvas.toBlob(async (blob) => {
+            const formData = new FormData();
+            formData.append('image', blob, 'frame.jpg');
+            
+            // Send to your local backend endpoint
+            const response = await fetch('http://localhost:5000/detect-sign', {
+              method: 'POST',
+              body: formData
+            });
+            
+            if (response.ok) {
+              const result = await response.json();
+              updateSignDetectionUI(result);
+            }
+          }, 'image/jpeg');
+        } catch (error) {
+          console.error("Sign detection error:", error);
+        }
+      }, 1000); // Adjust interval as needed
+    }
+
+    function updateSignDetectionUI(result) {
+      // Update the UI with detection results
+      const predictedLetter = result.letter || result.prediction || '';
+      const confidence = result.confidence || 0;
+      
+      // Only update if confidence is high enough (adjust threshold as needed)
+      if (confidence > 0.7) {
+        document.getElementById('predicted-letter').textContent = predictedLetter;
+        
+        // Add to current word if not a space
+        if (predictedLetter !== ' ') {
+          currentWord += predictedLetter;
+          document.getElementById('current-word').textContent = currentWord;
+        }
+      }
+    }
+
+    function sendToChat(message) {
+      // Implement sending the completed word to your chat interface
+      const chatInput = document.getElementById('message-input');
+      if (chatInput) {
+        chatInput.value = message;
+        // Trigger send button click if you want to auto-send
+        // document.getElementById('send-button').click();
+      }
+    }
+  </script>
+
+  <!-- Your exact chat code as provided -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healthcare Chat with Doctor</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+  <div class="chat-container">
+    <div class="chat-header">
+      <div class="header-content">
+        <div class="avatar">
+          <img src="https://img.icons8.com/color/96/000000/doctor-male.png" alt="Doctor">
+        </div>
+        <div class="header-info">
+          <h1>Chat with Doctor</h1>
+          <div class="status">
+            <span class="status-indicator online"></span>
+            <span class="status-text">Online</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="chat-messages" id="chat-messages">
+      <!-- Messages will be inserted here by JavaScript -->
+    </div>
+    
+    <div class="chat-input-area">
+      <div class="input-container">
+        <textarea id="message-input" class="message-input" placeholder="Type your message..."></textarea>
+        <button id="send-button" class="send-button">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+  <script src="server.js"></script>
+</body>
+</html>
